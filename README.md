@@ -1,4 +1,4 @@
-## PlanWeaver
+## TripleS
 Spring Boot와 React 기반 구독 WebApp
 
 ### Functions
