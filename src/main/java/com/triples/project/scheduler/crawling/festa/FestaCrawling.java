@@ -25,12 +25,13 @@ public class FestaCrawling implements ICrawling {
     // driver 재사용
     private final WebDriver driver;
 
+    private final String url = "https://festa.io/";
+
     @Override
     public List<Card> startCrawling() {
 
         List<Card> cardList = new ArrayList<>();
-
-        String url = "https://festa.io/";
+        
         driver.get(url);
 
         List<WebElement> list = driver.findElements(By.xpath("//a[@class='EventCardMobile__Card-sc-1do1vt8-0 dHIdtb']"));

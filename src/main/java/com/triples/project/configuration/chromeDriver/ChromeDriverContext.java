@@ -16,8 +16,8 @@ public class ChromeDriverContext {
 
     // window 는 .exe 붙여야 한다.
     // WebDriverManager Test 아무 이상 없을 경우 제거 할 것
-    @Value("${selenium.webDriver.path}")
-    private String CHROME_DRIVER_PATH;
+//    @Value("${selenium.webDriver.path}")
+//    private String CHROME_DRIVER_PATH;
 
     private WebDriver driver;
 
