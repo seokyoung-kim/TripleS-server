@@ -39,9 +39,7 @@ public class BrunchJob extends QuartzJobBean implements InterruptableJob {
         // 크롤링 로직 작성 to do
 
         List<Card> cardList = crawling.startCrawling();
-
-        cardDao.saveAll(cardList);
-
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>" + cardList.size());
+        cardDao.saveAll(cardList);
     }
 }

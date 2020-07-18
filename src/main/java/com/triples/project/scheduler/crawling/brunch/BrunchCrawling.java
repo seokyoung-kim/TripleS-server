@@ -4,8 +4,10 @@ import com.triples.project.dao.collection.Card;
 import com.triples.project.scheduler.crawling.ICrawling;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
@@ -26,31 +28,56 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BrunchCrawling implements ICrawling {
 
-    // driver 재사용
-    private final WebDriver driver;
+	// driver 재사용
+private final WebDriver driver;
 
-    @Override
-    public List<Card> startCrawling() {
+@Override
+public List<Card> startCrawling() {
 
-        List<Card> cardList = new ArrayList<>();
+		List<Card> cardList = new ArrayList<>();
 
-        String url = "https://brunch.co.kr/search?q=스프링 부트&type=article";
-        driver.get(url);
+		String url = "https://brunch.co.kr/search?q=spring boot&type=article";
+		driver.get(url);
 
-        WebDriverWait buffer = new WebDriverWait(driver, 10);
+		WebDriverWait buffer = new WebDriverWait(driver, 10);
 		
 		//데이터가 로딩되는데 시간이 걸리기 때문에 로딩 시간을 기다려 줘야 함.
-	    synchronized (buffer) {
-    		try {
+		synchronized (buffer) {
+			try {
 				buffer.wait(5000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-	    
-	    List<WebElement> contents = driver.findElements(By.cssSelector("#resultArticle > div > div.result_article > div.wrap_article_list > ul > li > a"));
-	    
+		
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		Boolean heightFlag = true;
+		//브라우져 높이
+		int browerHeight = Integer.parseInt(js.executeScript("return document.body.scrollHeight").toString());
+		System.out.println("browerHeigth : " + browerHeight);
+		int compareBrowerHeight = 0;
+		
+		while(heightFlag) {
+			js.executeScript("window.scrollTo(0,  document.body.scrollHeight);");
+			//js.executeScript("window.scrollTo(0, "+ browerHeight + 100 +");");
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			compareBrowerHeight = Integer.parseInt(js.executeScript("return document.body.scrollHeight").toString());
+			System.out.println("compareBrowerHeight : " + compareBrowerHeight);
+			if((compareBrowerHeight-browerHeight) > 0) {
+				browerHeight = compareBrowerHeight;
+			} else {
+				heightFlag = false;
+			}
+		}
+		
+		List<WebElement> contents = driver.findElements(By.cssSelector("#resultArticle > div > div.result_article > div.wrap_article_list > ul > li > a"));
+		
 		/*
 		 * for(WebElement element : contents) { System.out.println("Title : " +
 		 * element.findElement(By.cssSelector("strong")).getText());
@@ -69,38 +96,38 @@ public class BrunchCrawling implements ICrawling {
 		 * element.findElement(By.cssSelector("div.post_thumb > img")).getAttribute(
 		 * "src")); } catch (Exception e) { System.out.println("사진없음"); } }
 		 */
-	    
-	    //오늘 날짜
+		
+		//오늘 날짜
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
-		String today       = dateFormat.format(date);
+		String today	   = dateFormat.format(date);
 
 		for(WebElement content : contents) {
 			
-			String title       = content.findElement(By.cssSelector("strong")).getText();
+			String title	   = content.findElement(By.cssSelector("strong")).getText();
 			String description = content.findElement(By.cssSelector("div.wrap_sub_content")).getText();
-			String writer      = content.findElement(By.cssSelector("span > span:nth-child(10)")).getText();
+			String writer	  = content.findElement(By.cssSelector("span > span:nth-child(10)")).getText();
 			String created_at  = content.findElement(By.cssSelector("span > span.publish_time")).getText();
-			String link        = content.getAttribute("href");
-			String image       = "";
+			String link		= content.getAttribute("href");
+			String image	   = "";
 			try {
-				image       = content.findElement(By.cssSelector("div.post_thumb > img")).getAttribute("src");
+				image	   = content.findElement(By.cssSelector("div.post_thumb > img")).getAttribute("src");
 			} catch (Exception e) {
 				System.out.println("사진 없음");
 			}
 			
-	    	cardList.add(
-	    			Card.builder()
-	    			.title(title)
-	    			.description(description)
-	    			.writer(writer)
-	    			.created_at(created_at)
-	    			.link(link)
-	    			.date(today)
-	    			.image(image)
-	    			.build()
-	    	);
-	    }
-        return cardList;
-    }
+			cardList.add(
+					Card.builder()
+					.title(title)
+					.description(description)
+					.writer(writer)
+					.created_at(created_at)
+					.link(link)
+					.date(today)
+					.image(image)
+					.build()
+			);
+		}
+		return cardList;
+	}
 }

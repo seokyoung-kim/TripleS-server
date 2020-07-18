@@ -36,7 +36,7 @@ public class CrawlingScheduler {
 //                .withSchedule(CronScheduleBuilder.cronSchedule("*/1 * * * *")).build();
 
         Trigger trigger2 = TriggerBuilder.newTrigger().
-                withSchedule(CronScheduleBuilder.cronSchedule("1 * * * * ?")).build();
+                withSchedule(CronScheduleBuilder.cronSchedule("5 * * * * ?")).build();
 
         scheduler.scheduleJob(job, trigger);
         scheduler.scheduleJob(job2, trigger2);
