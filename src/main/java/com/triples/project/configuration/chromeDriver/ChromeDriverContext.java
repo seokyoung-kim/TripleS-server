@@ -4,6 +4,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,7 @@ public class ChromeDriverContext {
 //    private String CHROME_DRIVER_PATH;
 
     private WebDriver driver;
+    private WebDriverWait webDriverWait;
 
     @Bean
     public WebDriver webDriver() {
@@ -27,23 +29,32 @@ public class ChromeDriverContext {
        // System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATH);
 
 //        ChromeOptions options = new ChromeOptions();
-//        options.addArguments("--window-size=1366,768"); // 정확히 어떤 옵션인지 확인 불가..
+//        options.addArguments("--window-size=1366,768");
 //        options.addArguments("--headless");
 //        options.setProxy(null);                         // ??  정확히 알고 사용 할 것
-//        DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+//        DesiredCapabilities capabilities = DesiredCapabilities.chrome(); // ?
 //        capabilities.setCapability(ChromeOptions.CAPABILITY, options);
 //        capabilities.setCapability("pageLoadStrategy", "none");
 
-        WebDriverManager.chromedriver().setup(); // gradle에 설정된 라이브러리가 알아서 set up
-                                                 // webdriver 가 설치할 필요 없음
+
+        // WebDriverManager 라이브러리에 의해서 자동으로 webDriver setup
+        // webdriver 가 설치할 필요 없음
+        WebDriverManager.chromedriver().setup();
 
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("headless");
+        //options.addArguments("headless");
         driver = new ChromeDriver(options);
+        driver.manage().window().maximize(); // window 창 최대화
 
-        //driver = new ChromeDriver(); // driver 재사용 test하기 위해서 option 종료
-                                     // driver.close 하지 않고도 재사용 가능? 메모리에 계속 남아 있나?
         return driver;
+    }
+
+    @Bean
+    public WebDriverWait webDriverWait() {
+        webDriverWait
+                = new WebDriverWait(driver, 20);
+
+        return webDriverWait;
     }
 
 

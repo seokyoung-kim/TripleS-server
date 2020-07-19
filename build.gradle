@@ -36,12 +36,12 @@ dependencies {
     compile group: 'org.seleniumhq.selenium', name: 'selenium-java'//, version: '3.14.0'
 
     // webDriver 자동 설정 매니저
-    compile("io.github.bonigarcia:webdrivermanager:4.0.0")
+    compile("io.github.bonigarcia:webdrivermanager:4.1.0")
 
-    // Quartz
+    // Quartz Scheduler
     implementation 'org.springframework.boot:spring-boot-starter-quartz'
-//    compile group: 'org.quartz-scheduler', name: 'quartz'
-//    compile group: 'org.quartz-scheduler', name: 'quartz-jobs'
+
+
 }
 
 test {

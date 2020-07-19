@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class ProjectApplication {
 
-
     private final CrawlingScheduler scheduler; // 스케줄러
 
     public static void main(String[] args) {

@@ -2,16 +2,15 @@ package com.triples.project.scheduler.crawling;
 
 import com.triples.project.scheduler.crawling.festa.FestaJob;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.Map;
+
 
 /**
- *  스케줄러
+ *
+ * @description : Job 을 정해진 시간에 실행 하도록 설정 ( Crawling Scheduler )
  */
 @Component
 @RequiredArgsConstructor
@@ -20,23 +19,47 @@ public class CrawlingScheduler {
     private final Scheduler scheduler;
 
     @PostConstruct
-    public void start() throws SchedulerException {
+    public void start() throws SchedulerException, InterruptedException {
 
         //job 지정
-        JobDetail job = JobBuilder.newJob(FestaJob.class).withIdentity("festa").build();
-        //JobDetail job2 = JobBuilder.newJob(FestaJob2.class).withIdentity("festa2").build();
+        JobDataMap jobDataMap1 = new JobDataMap();
+        jobDataMap1.put("JobName","Job Chain 1"); // JobName 을 Job Chain 1 로 지정
+        JobDetail jobDetail = JobBuilder.newJob(FestaJob.class).usingJobData(jobDataMap1).build();
 
-        //trigger 생성
-        Trigger trigger = TriggerBuilder.newTrigger().
-                withSchedule(CronScheduleBuilder.cronSchedule("5 * * * * ?")).build();
-//        startAt과 endAt을 사용해 job 스케쥴의 시작, 종료 시간도 지정할 수 있다.
-//        Trigger trigger = TriggerBuilder.newTrigger().startAt(startDateTime).endAt(EndDateTime)
-//                .withSchedule(CronScheduleBuilder.cronSchedule("*/1 * * * *")).build();
+        JobDataMap jobDataMap2 = new JobDataMap();
+        jobDataMap2.put("JobName","Job Chain 2");
+        JobDetail jobDetail2 = JobBuilder.newJob(FestaJob.class).usingJobData(jobDataMap2).build();
 
-//        Trigger trigger2 = TriggerBuilder.newTrigger().
-//                withSchedule(CronScheduleBuilder.cronSchedule("5 * * * * ?")).build();
+        JobDataMap jobDataMap3 = new JobDataMap();
+        jobDataMap3.put("JobName","Job Chain 3");
+        JobDetail jobDetail3 = JobBuilder.newJob(FestaJob.class).usingJobData(jobDataMap3).build();
 
-        scheduler.scheduleJob(job, trigger);
-        //scheduler.scheduleJob(job2, trigger2);
+
+
+
+        scheduler.scheduleJob(jobDetail, buildCronJobTrigger("3 * * * * ?"));
+        scheduler.scheduleJob(jobDetail2, buildCronJobTrigger("3 * * * * ?"));
+        scheduler.scheduleJob(jobDetail3, buildCronJobTrigger("3 * * * * ?"));
+//        scheduler.scheduleJob(jobDetail2, buildCronJobTrigger("3 * * * * ?"));
+//        scheduler.scheduleJob(jobDetail3, buildCronJobTrigger("3 * * * * ?"));
+
+        Thread.sleep(3 * 1000);  // Job이 실행될 수 있는 시간 여유를 준다
+
+    }
+
+    /**
+     * @param scheduleExp ( cron 표현식 )
+     * @Description Trigger 생성 함수
+     * @return : Trigger ( Job을 실행 시킬 스케줄링 조건 )
+     * // *  *  *  *  *  *  *
+     * // 초 분  시 일  월 요일 년도(생략가능)
+     */
+    public Trigger buildCronJobTrigger(String scheduleExp) {
+        return TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule(scheduleExp))
+                .build();
+
+        //        startAt과 endAt을 사용해 job 스케쥴의 시작, 종료 시간도 지정할 수 있다.
+        //        Trigger trigger = TriggerBuilder.newTrigger().startAt(startDateTime).endAt(EndDateTime)
+        //                .withSchedule(CronScheduleBuilder.cronSchedule("*/1 * * * *")).build();
     }
 }
