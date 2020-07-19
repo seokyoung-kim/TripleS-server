@@ -1,15 +1,11 @@
 package com.triples.project.scheduler.crawling;
 
 import com.triples.project.scheduler.crawling.festa.FestaJob;
-import com.triples.project.scheduler.crawling.hello.HelloJob;
 import lombok.RequiredArgsConstructor;
 import org.quartz.*;
-import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.LinkedList;
-import java.util.List;
 
 
 /**
@@ -23,46 +19,31 @@ public class CrawlingScheduler {
     private final Scheduler scheduler;
 
     @PostConstruct
-    public void start() throws SchedulerException {
+    public void start() throws SchedulerException, InterruptedException {
 
         //job 지정
         JobDataMap jobDataMap1 = new JobDataMap();
         jobDataMap1.put("JobName","Job Chain 1"); // JobName 을 Job Chain 1 로 지정
         JobDetail jobDetail = JobBuilder.newJob(FestaJob.class).usingJobData(jobDataMap1).build();
 
-//        JobDataMap jobDataMap2 = new JobDataMap();
-//        jobDataMap2.put("JobName","Job Chain 2");
-//        JobDetail jobDetail2 = JobBuilder.newJob(HelloJob.class).usingJobData(jobDataMap2).build();
-//
-//        JobDataMap jobDataMap3 = new JobDataMap();
-//        jobDataMap3.put("JobName","Job Chain 3");
-//        JobDetail jobDetail3 = JobBuilder.newJob(HelloJob.class).usingJobData(jobDataMap3).build();
+        JobDataMap jobDataMap2 = new JobDataMap();
+        jobDataMap2.put("JobName","Job Chain 2");
+        JobDetail jobDetail2 = JobBuilder.newJob(FestaJob.class).usingJobData(jobDataMap2).build();
 
+        JobDataMap jobDataMap3 = new JobDataMap();
+        jobDataMap3.put("JobName","Job Chain 3");
+        JobDetail jobDetail3 = JobBuilder.newJob(FestaJob.class).usingJobData(jobDataMap3).build();
 
-//        List<JobDetail> jobDetailQueue = new LinkedList<>();
-//        jobDetailQueue.add(jobDetail);
-//        jobDetailQueue.add(jobDetail2);
-//        jobDetailQueue.add(jobDetail3);
-//
-//        jobDetail.getJobDataMap().put("JobDetailQueue", jobDetailQueue);
-
-
-//        //trigger 생성
-//        Trigger trigger = TriggerBuilder.newTrigger().
-//                withSchedule(CronScheduleBuilder.cronSchedule("5 * * * * ?")).build();
-//
-//        // 스케줄러 실행 및 JobDetail과 Trigger 정보로 스케줄링
-//        Scheduler defaultScheduler = StdSchedulerFactory.getDefaultScheduler();
-//        defaultScheduler.start();
-//        defaultScheduler.scheduleJob(jobDetail, trigger);
 
 
 
         scheduler.scheduleJob(jobDetail, buildCronJobTrigger("3 * * * * ?"));
+        scheduler.scheduleJob(jobDetail2, buildCronJobTrigger("3 * * * * ?"));
+        scheduler.scheduleJob(jobDetail3, buildCronJobTrigger("3 * * * * ?"));
 //        scheduler.scheduleJob(jobDetail2, buildCronJobTrigger("3 * * * * ?"));
 //        scheduler.scheduleJob(jobDetail3, buildCronJobTrigger("3 * * * * ?"));
 
-
+        Thread.sleep(3 * 1000);  // Job이 실행될 수 있는 시간 여유를 준다
 
     }
 

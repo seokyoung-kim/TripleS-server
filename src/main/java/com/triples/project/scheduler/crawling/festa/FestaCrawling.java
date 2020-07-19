@@ -41,22 +41,20 @@ public class FestaCrawling implements ICrawling {
 
         JavascriptExecutor js = (JavascriptExecutor) driver;
 
-
-
-        for(int i =0; i< 3; i++) {
-
-            js.executeScript("window.scrollTo(0,document.body.scrollHeight)");
-
-            //데이터가 로딩되는데 시간이 걸리기 때문에 로딩 시간을 기다려 줘야 함.
-            synchronized (webDriverWait) {
+        // 크롤링 시작전에 데이터 로딩 Wait
+        synchronized (webDriverWait) {
                 webDriverWait.wait(3000);
             }
 
+        for(int i =0; i< 3; i++) { // 각 url 에 따라 설정
 
+            js.executeScript("window.scrollTo(0,document.body.scrollHeight)");
 
+            // Scroll Down 후 데이터 로딩 Wait
+            synchronized (webDriverWait) {
+                webDriverWait.wait(3000);
+            }
         }
-
-
 
         List<WebElement> list = driver.findElements(By.xpath("//a[@class='EventCardMobile__Card-sc-1do1vt8-0 dHIdtb']"));
 
