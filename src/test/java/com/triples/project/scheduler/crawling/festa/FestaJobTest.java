@@ -26,7 +26,7 @@ public class FestaJobTest {
         // 드라이버만 종료
 
         // driver.quit() 할경우 모든 셀레니움의 세션이 종료 되므로
-        // bean으로 설정되어 있는 WebDriver 도 종료가 되므로 driver.close만 작성
+        // bean으로 설정되어 있는 WebDriver 도 종료가 되므로 driver.close 만 설정
         driver.close();
     }
 

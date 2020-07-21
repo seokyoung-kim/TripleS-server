@@ -17,18 +17,14 @@ public class Card {
     private String title;
     private String description;
     private String platform;
-    private String is_saved;
+    private Boolean is_saved;    // 좋아요
     private String category;
-    private String tags;
     private String date;        //
-    private String saved_count; //
-    private String created_at;  //
+    private String saved_count; // 좋아요 수
+    private String created_at;  // 크롤링한 날짜
 
     @Builder
-    public Card(String image, String writer, String link,
-                String title, String description, String platform,
-                String is_saved, String category, String tags, String date,
-                String saved_count, String created_at) {
+    public Card(String image, String writer, String link, String title, String description, String platform, Boolean is_saved, String category, String date, String saved_count, String created_at) {
         this.image = image;
         this.writer = writer;
         this.link = link;
@@ -37,7 +33,6 @@ public class Card {
         this.platform = platform;
         this.is_saved = is_saved;
         this.category = category;
-        this.tags = tags;
         this.date = date;
         this.saved_count = saved_count;
         this.created_at = created_at;
