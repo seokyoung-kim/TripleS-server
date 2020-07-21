@@ -38,7 +38,13 @@ public class BrunchJob extends QuartzJobBean implements InterruptableJob {
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         // 크롤링 로직 작성 to do
 
-        List<Card> cardList = crawling.startCrawling();
+        List<Card> cardList = null;
+		try {
+			cardList = crawling.startCrawling();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>" + cardList.size());
         cardDao.saveAll(cardList);
     }
