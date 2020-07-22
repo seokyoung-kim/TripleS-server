@@ -6,10 +6,7 @@ import org.quartz.InterruptableJob;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.UnableToInterruptJobException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.quartz.QuartzJobBean;
-import org.springframework.stereotype.Component;
 
 import com.triples.project.dao.ICardDao;
 import com.triples.project.dao.collection.Card;
@@ -17,15 +14,13 @@ import com.triples.project.scheduler.crawling.ICrawling;
 
 import lombok.RequiredArgsConstructor;
 
-@Component
+
 @RequiredArgsConstructor
 public class BrunchJob extends QuartzJobBean implements InterruptableJob {
 
     private final ICardDao cardDao;
     
-    @Autowired
-    @Qualifier("brunchCrawling")
-    private final ICrawling crawling;
+    private final ICrawling brunchCrawling;
 
 
     // 예외 처리
@@ -40,7 +35,7 @@ public class BrunchJob extends QuartzJobBean implements InterruptableJob {
 
         List<Card> cardList = null;
 		try {
-			cardList = crawling.startCrawling();
+			cardList = brunchCrawling.startCrawling();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
