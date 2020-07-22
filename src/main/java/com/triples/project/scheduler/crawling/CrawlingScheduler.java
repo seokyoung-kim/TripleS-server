@@ -1,5 +1,6 @@
 package com.triples.project.scheduler.crawling;
 
+import com.triples.project.scheduler.crawling.brunch.BrunchJob;
 import com.triples.project.scheduler.crawling.festa.FestaJob;
 import lombok.RequiredArgsConstructor;
 import org.quartz.*;
@@ -21,7 +22,11 @@ public class CrawlingScheduler {
     @PostConstruct
     public void start() throws SchedulerException, InterruptedException {
 
-        //job 지정
+//        //job 지정
+//        JobDetail job = JobBuilder.newJob(FestaJob.class).withIdentity("festa").build();
+//        JobDetail job2 = JobBuilder.newJob(BrunchJob.class).withIdentity("brunch").build();
+//        //JobDetail job2 = JobBuilder.newJob(FestaJob2.class).withIdentity("festa2").build();
+        
         JobDataMap jobDataMap1 = new JobDataMap();
         jobDataMap1.put("JobName","Job Chain 1"); // JobName 을 Job Chain 1 로 지정
         JobDetail jobDetail = JobBuilder.newJob(FestaJob.class).usingJobData(jobDataMap1).build();
@@ -34,8 +39,9 @@ public class CrawlingScheduler {
         jobDataMap3.put("JobName","Job Chain 3");
         JobDetail jobDetail3 = JobBuilder.newJob(FestaJob.class).usingJobData(jobDataMap3).build();
 
-
-
+//        scheduler.scheduleJob(job, trigger);
+//        scheduler.scheduleJob(job2, trigger2);
+//        //scheduler.scheduleJob(job2, trigger2);
 
         scheduler.scheduleJob(jobDetail, buildCronJobTrigger("3 * * * * ?"));
         scheduler.scheduleJob(jobDetail2, buildCronJobTrigger("3 * * * * ?"));
