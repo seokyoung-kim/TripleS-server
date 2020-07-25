@@ -30,10 +30,10 @@ import lombok.RequiredArgsConstructor;
 public class BrunchCrawling implements ICrawling {
 
 	// driver 재사용
-private final WebDriver driver;
-
-@Override
-public List<Card> startCrawling() {
+	private final WebDriver driver;
+	
+	@Override
+	public List<Card> startCrawling() throws InterruptedException {
 
 		List<Card> cardList = new ArrayList<>();
 
@@ -44,12 +44,7 @@ public List<Card> startCrawling() {
 		
 		//데이터가 로딩되는데 시간이 걸리기 때문에 로딩 시간을 기다려 줘야 함.
 		synchronized (buffer) {
-			try {
-				buffer.wait(5000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			buffer.wait(5000);
 		}
 		
 		JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -62,14 +57,10 @@ public List<Card> startCrawling() {
 		while(heightFlag) {
 			js.executeScript("window.scrollTo(0,  document.body.scrollHeight);");
 			//js.executeScript("window.scrollTo(0, "+ browerHeight + 100 +");");
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			synchronized (buffer) {
+				buffer.wait(1000);
 			}
 			compareBrowerHeight = Integer.parseInt(js.executeScript("return document.body.scrollHeight").toString());
-			System.out.println("compareBrowerHeight : " + compareBrowerHeight);
 			if((compareBrowerHeight-browerHeight) > 0) {
 				browerHeight = compareBrowerHeight;
 			} else {
@@ -107,9 +98,9 @@ public List<Card> startCrawling() {
 			
 			String title	   = content.findElement(By.cssSelector("strong")).getText();
 			String description = content.findElement(By.cssSelector("div.wrap_sub_content")).getText();
-			String writer	  = content.findElement(By.cssSelector("span > span:nth-child(10)")).getText();
+			String writer	   = content.findElement(By.cssSelector("span > span:nth-child(10)")).getText();
 			String created_at  = content.findElement(By.cssSelector("span > span.publish_time")).getText();
-			String link		= content.getAttribute("href");
+			String link		   = content.getAttribute("href");
 			String image	   = "";
 			try {
 				image	   = content.findElement(By.cssSelector("div.post_thumb > img")).getAttribute("src");

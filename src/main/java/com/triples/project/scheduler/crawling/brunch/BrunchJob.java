@@ -6,8 +6,21 @@ import org.quartz.InterruptableJob;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.UnableToInterruptJobException;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.MergeOperation;
+import org.springframework.data.mongodb.core.aggregation.MergeOperation.MergeOperationBuilder;
+import org.springframework.data.mongodb.core.aggregation.MergeOperation.WhenDocumentsDontMatch;
+import org.springframework.data.mongodb.core.aggregation.MergeOperation.WhenDocumentsMatch;
+import org.springframework.data.mongodb.core.aggregation.ObjectOperators.MergeObjects;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
+import com.mongodb.client.model.MergeOptions;
+import com.mongodb.client.model.MergeOptions.WhenMatched;
+import com.mongodb.client.model.MergeOptions.WhenNotMatched;
 import com.triples.project.dao.ICardDao;
 import com.triples.project.dao.collection.Card;
 import com.triples.project.scheduler.crawling.ICrawling;
@@ -41,6 +54,7 @@ public class BrunchJob extends QuartzJobBean implements InterruptableJob {
 			e.printStackTrace();
 		}
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>" + cardList.size());
+        
         cardDao.saveAll(cardList);
     }
 }

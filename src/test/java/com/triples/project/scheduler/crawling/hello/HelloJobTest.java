@@ -17,7 +17,7 @@ public class HelloJobTest {
         JobDataMap jobDataMap1 = new JobDataMap();
         jobDataMap1.put("JobName","Job Chain 1");
 
-        JobDetail jobDetail1 = JobBuilder.newJob(HelloJob.class)
+        JobDetail jobDetail1 = JobBuilder.newJob()
         .usingJobData(jobDataMap1).build();
 
         Trigger trigger1 = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder
@@ -27,7 +27,7 @@ public class HelloJobTest {
         JobDataMap jobDataMap2 = new JobDataMap();
         jobDataMap2.put("JobName","Job Chain 2");
 
-        JobDetail jobDetail2 = JobBuilder.newJob(HelloJob.class)
+        JobDetail jobDetail2 = JobBuilder.newJob()
                 .usingJobData(jobDataMap2).build();
 
         Trigger trigger2 = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder
@@ -37,7 +37,7 @@ public class HelloJobTest {
         JobDataMap jobDataMap3 = new JobDataMap();
         jobDataMap3.put("JobName","Job Chain 3");
 
-        JobDetail jobDetail3 = JobBuilder.newJob(HelloJob.class)
+        JobDetail jobDetail3 = JobBuilder.newJob()
                 .usingJobData(jobDataMap3).build();
 
         Trigger trigger3 = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder
