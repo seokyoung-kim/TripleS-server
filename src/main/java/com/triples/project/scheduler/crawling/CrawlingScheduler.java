@@ -25,30 +25,23 @@ public class CrawlingScheduler {
 
 //        //job 지정
 //        JobDetail job = JobBuilder.newJob(FestaJob.class).withIdentity("festa").build();
-//        JobDetail job2 = JobBuilder.newJob(BrunchJob.class).withIdentity("brunch").build();
-//        //JobDetail job2 = JobBuilder.newJob(FestaJob2.class).withIdentity("festa2").build();
         
         JobDataMap jobDataMap1 = new JobDataMap();
         jobDataMap1.put("JobName","Job Chain 1"); // JobName 을 Job Chain 1 로 지정
         JobDetail jobDetail = JobBuilder.newJob(VelogJob.class).usingJobData(jobDataMap1).build();
 
-//        JobDataMap jobDataMap2 = new JobDataMap();
-//        jobDataMap2.put("JobName","Job Chain 2");
-//        JobDetail jobDetail2 = JobBuilder.newJob(FestaJob.class).usingJobData(jobDataMap2).build();
-//
-//        JobDataMap jobDataMap3 = new JobDataMap();
-//        jobDataMap3.put("JobName","Job Chain 3");
-//        JobDetail jobDetail3 = JobBuilder.newJob(FestaJob.class).usingJobData(jobDataMap3).build();
+        JobDataMap jobDataMap2 = new JobDataMap();
+        jobDataMap2.put("JobName","Job Chain 2");
+        JobDetail jobDetail2 = JobBuilder.newJob(FestaJob.class).usingJobData(jobDataMap2).build();
 
-//        scheduler.scheduleJob(job, trigger);
-//        scheduler.scheduleJob(job2, trigger2);
-//        //scheduler.scheduleJob(job2, trigger2);
+        JobDataMap jobDataMap3 = new JobDataMap();
+        jobDataMap3.put("JobName","Job Chain 3");
+        JobDetail jobDetail3 = JobBuilder.newJob(BrunchJob.class).usingJobData(jobDataMap3).build();
 
-        scheduler.scheduleJob(jobDetail, buildCronJobTrigger("3 * * * * ?"));
-//        scheduler.scheduleJob(jobDetail2, buildCronJobTrigger("3 * * * * ?"));
-//        scheduler.scheduleJob(jobDetail3, buildCronJobTrigger("3 * * * * ?"));
-//        scheduler.scheduleJob(jobDetail2, buildCronJobTrigger("3 * * * * ?"));
-//        scheduler.scheduleJob(jobDetail3, buildCronJobTrigger("3 * * * * ?"));
+
+        scheduler.scheduleJob(jobDetail, buildCronJobTrigger("59 * * * * ?"));
+        scheduler.scheduleJob(jobDetail2, buildCronJobTrigger("59 * * * * ?"));
+        scheduler.scheduleJob(jobDetail3, buildCronJobTrigger("59 * * * * ?"));
 
         Thread.sleep(3 * 1000);  // Job이 실행될 수 있는 시간 여유를 준다
 

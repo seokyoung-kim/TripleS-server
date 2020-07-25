@@ -23,8 +23,6 @@ import java.util.List;
 public class VelogJob extends QuartzJobBean implements InterruptableJob {
 
     private final ICardDao cardDao;
-    @Qualifier("velogCrawling")
-    @Autowired
     private final ICrawling velogCrawling;
 
     // 예외 처리

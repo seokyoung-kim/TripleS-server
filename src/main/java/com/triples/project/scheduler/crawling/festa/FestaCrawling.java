@@ -7,13 +7,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -22,7 +20,7 @@ import java.util.concurrent.TimeUnit;
  * @description : URL에 있는 내용을 크롤링하는 클래스
  */
 
-@Component
+@Component("festaCrawling")
 @RequiredArgsConstructor
 public class FestaCrawling implements ICrawling {
 
@@ -71,11 +69,7 @@ public class FestaCrawling implements ICrawling {
             // 무료, 유료 교육 , 외부 이벤트 로 수정 할 것
 
             System.out.println(">>>>>>>>>>>>" + link);
-            System.out.println(">>>>>>>>>>>>" + image);
-            System.out.println(">>>>>>>>>>>>" + title);
-            System.out.println(">>>>>>>>>>>>" + data);
-            System.out.println(">>>>>>>>>>>>" + writer);
-            System.out.println(">>>>>>>>>>>>" + card_footer);
+
 
             cardList.add(Card.builder().title(title).link(link).image(image)
                     .date(data).writer(writer).build());
