@@ -2,6 +2,7 @@ package com.triples.project.scheduler.crawling;
 
 import com.triples.project.scheduler.crawling.brunch.BrunchJob;
 import com.triples.project.scheduler.crawling.festa.FestaJob;
+import com.triples.project.scheduler.crawling.velog.VelogJob;
 import lombok.RequiredArgsConstructor;
 import org.quartz.*;
 import org.springframework.stereotype.Component;
@@ -29,23 +30,23 @@ public class CrawlingScheduler {
         
         JobDataMap jobDataMap1 = new JobDataMap();
         jobDataMap1.put("JobName","Job Chain 1"); // JobName 을 Job Chain 1 로 지정
-        JobDetail jobDetail = JobBuilder.newJob(FestaJob.class).usingJobData(jobDataMap1).build();
+        JobDetail jobDetail = JobBuilder.newJob(VelogJob.class).usingJobData(jobDataMap1).build();
 
-        JobDataMap jobDataMap2 = new JobDataMap();
-        jobDataMap2.put("JobName","Job Chain 2");
-        JobDetail jobDetail2 = JobBuilder.newJob(FestaJob.class).usingJobData(jobDataMap2).build();
-
-        JobDataMap jobDataMap3 = new JobDataMap();
-        jobDataMap3.put("JobName","Job Chain 3");
-        JobDetail jobDetail3 = JobBuilder.newJob(FestaJob.class).usingJobData(jobDataMap3).build();
+//        JobDataMap jobDataMap2 = new JobDataMap();
+//        jobDataMap2.put("JobName","Job Chain 2");
+//        JobDetail jobDetail2 = JobBuilder.newJob(FestaJob.class).usingJobData(jobDataMap2).build();
+//
+//        JobDataMap jobDataMap3 = new JobDataMap();
+//        jobDataMap3.put("JobName","Job Chain 3");
+//        JobDetail jobDetail3 = JobBuilder.newJob(FestaJob.class).usingJobData(jobDataMap3).build();
 
 //        scheduler.scheduleJob(job, trigger);
 //        scheduler.scheduleJob(job2, trigger2);
 //        //scheduler.scheduleJob(job2, trigger2);
 
         scheduler.scheduleJob(jobDetail, buildCronJobTrigger("3 * * * * ?"));
-        scheduler.scheduleJob(jobDetail2, buildCronJobTrigger("3 * * * * ?"));
-        scheduler.scheduleJob(jobDetail3, buildCronJobTrigger("3 * * * * ?"));
+//        scheduler.scheduleJob(jobDetail2, buildCronJobTrigger("3 * * * * ?"));
+//        scheduler.scheduleJob(jobDetail3, buildCronJobTrigger("3 * * * * ?"));
 //        scheduler.scheduleJob(jobDetail2, buildCronJobTrigger("3 * * * * ?"));
 //        scheduler.scheduleJob(jobDetail3, buildCronJobTrigger("3 * * * * ?"));
 
