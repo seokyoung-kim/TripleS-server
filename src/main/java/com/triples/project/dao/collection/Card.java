@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Card {
 
     @Id
-    @Indexed(name="index", unique = true)
+    @Indexed
     public String id;
     private String image;
     private String writer;
