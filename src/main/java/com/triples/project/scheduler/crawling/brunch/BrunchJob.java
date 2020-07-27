@@ -55,6 +55,7 @@ public class BrunchJob extends QuartzJobBean implements InterruptableJob {
 		}
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>" + cardList.size());
         
-        cardDao.saveAll(cardList);
+//        cardDao.saveAll(cardList);
+        cardDao.mergeCard(cardList);
     }
 }

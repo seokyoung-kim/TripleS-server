@@ -3,6 +3,7 @@ package com.triples.project.dao.collection;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
@@ -10,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Card {
 
     @Id
+    @Indexed(name="index", unique = true)
     public String id;
     private String image;
     private String writer;

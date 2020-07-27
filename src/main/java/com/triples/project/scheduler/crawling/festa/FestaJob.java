@@ -25,7 +25,7 @@ import java.util.List;
 public class FestaJob extends QuartzJobBean implements InterruptableJob {
 
     private final ICardDao cardDao;
-    private final ICrawling crawling;
+    private final ICrawling festaCrawling;
 
     private boolean isInterrupted = false;
     private JobKey jobKey = null;
@@ -52,7 +52,7 @@ public class FestaJob extends QuartzJobBean implements InterruptableJob {
         // Crawling Start
         List<Card> cardList = new ArrayList<>();
 
-        cardList = crawling.startCrawling();
+        cardList = festaCrawling.startCrawling();
 
         cardDao.saveAll(cardList); // to do : 중복 데이터 제거를 위한 merge 이용할 것
 
@@ -60,7 +60,7 @@ public class FestaJob extends QuartzJobBean implements InterruptableJob {
 
         log.info("execute invoked, jobKey: " + jobKey + ", time:" +
                 LocalDateTime.now().toString() + ", crawling size : " + cardList.size());
-        //System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>" + cardList.size());
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>" + cardList.size());
 
     }
 }

@@ -4,5 +4,5 @@ import com.triples.project.dao.brunch.ICardDaoCustom;
 import com.triples.project.dao.collection.Card;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface ICardDao extends MongoRepository<Card, String> {
+public interface ICardDao extends MongoRepository<Card, String>, ICardDaoCustom {
 }

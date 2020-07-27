@@ -6,7 +6,6 @@ build/
 !**/src/test/**
               
 ### generated files ###
-bin/
 gen/
 
 ### STS ###

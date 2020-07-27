@@ -24,7 +24,6 @@ import lombok.RequiredArgsConstructor;
  * @URL : brunch
  * @description : URL에 있는 내용을 크롤링하는 클래스
  */
-@Primary
 @Component("brunchCrawling")
 @RequiredArgsConstructor
 public class BrunchCrawling implements ICrawling {
@@ -106,6 +105,7 @@ public class BrunchCrawling implements ICrawling {
 				image	   = content.findElement(By.cssSelector("div.post_thumb > img")).getAttribute("src");
 			} catch (Exception e) {
 				System.out.println("사진 없음");
+				image	   = "None";
 			}
 			
 			cardList.add(
