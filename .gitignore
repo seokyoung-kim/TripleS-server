@@ -33,3 +33,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### mongodb server info ###
+application-dbPath.properties

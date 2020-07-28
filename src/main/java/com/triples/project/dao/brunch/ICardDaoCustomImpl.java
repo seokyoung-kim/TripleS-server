@@ -30,20 +30,7 @@ public class ICardDaoCustomImpl implements ICardDaoCustom{
 	@Override
 	public void mergeCard(List<Card> cardList) {
 		List<AggregationOperation> list = new ArrayList<AggregationOperation>();
-		MergeOperationBuilder merge = new MergeOperationBuilder();
-		MergeOperationTarget mergeTarget = MergeOperationTarget.collection("card");
-		merge.into(mergeTarget);
-		String[] colum = new String[3];
-		colum[0] = "id";
-		colum[1] = "title";
-		colum[2] = "description";
-		merge.on(colum);
-		merge.whenMatched(WhenDocumentsMatch.replaceDocument());
-		merge.whenNotMatched(WhenDocumentsDontMatch.insertNewDocument());
-
-		MergeOperation mergeOperation = merge.build();
 		
-		mongoTemplate.aggregate(Aggregation.newAggregation(mergeOperation), Card.class, Card.class);
 	}
 	
 }
