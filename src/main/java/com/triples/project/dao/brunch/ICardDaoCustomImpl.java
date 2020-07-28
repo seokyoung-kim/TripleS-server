@@ -12,6 +12,8 @@ import org.springframework.data.mongodb.core.aggregation.MergeOperation.MergeOpe
 import org.springframework.data.mongodb.core.aggregation.MergeOperation.MergeOperationTarget;
 import org.springframework.data.mongodb.core.aggregation.MergeOperation.WhenDocumentsDontMatch;
 import org.springframework.data.mongodb.core.aggregation.MergeOperation.WhenDocumentsMatch;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.aggregation.MergeOperation.MergeOperationTarget;
 
 import com.triples.project.dao.collection.Card;
@@ -28,9 +30,25 @@ public class ICardDaoCustomImpl implements ICardDaoCustom{
 	private final MongoTemplate mongoTemplate;
 	
 	@Override
-	public void mergeCard(List<Card> cardList) {
-		List<AggregationOperation> list = new ArrayList<AggregationOperation>();
+	public List<Card> mergeCard(List<Card> cardList) {
+//		MergeOperationBuilder merge = new MergeOperationBuilder();
+//		MergeOperationTarget mergeTarget = MergeOperationTarget.collection("card");
+//		merge.into(mergeTarget);
+//		String[] colum = new String[3];
+//		colum[0] = "id";
+//		colum[1] = "title";
+//		colum[2] = "description";
+//		merge.on(colum);
+//		merge.whenMatched(WhenDocumentsMatch.replaceDocument());
+//		merge.whenNotMatched(WhenDocumentsDontMatch.insertNewDocument());
+//
+//		MergeOperation mergeOperation = merge.build();
+//		
+//		mongoTemplate.aggregate(Aggregation.newAggregation(mergeOperation), Card.class, Card.class);
 		
+		Criteria criteria = new Criteria().where("card");
+		Query query = new Query(criteria);
+		return mongoTemplate.find(query, Card.class);
 	}
 	
 }
