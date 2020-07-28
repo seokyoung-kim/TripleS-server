@@ -29,9 +29,9 @@ public class Card {
     private String date;        //
     private String saved_count; // 좋아요 수
     @CreatedDate
-    private String created_at;  // 크롤링한 날짜
+    private String created_at; // 생성 날짜
     @LastModifiedDate
-    private String updated_at; // update 날짜
+    private String updated_at; // 변경 날짜
 
     @Builder
     public Card(String image, String writer, String link, String title,
