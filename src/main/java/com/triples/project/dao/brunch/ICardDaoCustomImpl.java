@@ -55,7 +55,7 @@ public class ICardDaoCustomImpl implements ICardDaoCustom{
 		return mongoTemplate.find(query, Card.class);
 	}
 	
-	private void updateBrunchCard(String title) {
+	private void updateBrunchCard(List<Card> cardList) {
 		Update update = new Update();
 		update.set("title", title);
 		
