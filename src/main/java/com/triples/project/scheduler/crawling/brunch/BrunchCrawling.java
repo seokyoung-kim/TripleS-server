@@ -117,6 +117,8 @@ public class BrunchCrawling implements ICrawling {
 					.link(link)
 					.date(today)
 					.image(image)
+					.platform("brunch")
+					.category("spring boot")
 					.build()
 			);
 		}

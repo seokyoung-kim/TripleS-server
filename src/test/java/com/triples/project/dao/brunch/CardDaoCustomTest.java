@@ -24,11 +24,17 @@ public class CardDaoCustomTest {
 	@Test
 	public void test() {
 		List<Card> cardList = new ArrayList<Card>();
-		List<Card> resultList = cardDao.mergeCard(cardList);
+		List<Card> resultList2 = cardDao.findAll();
+		
+//		System.out.println("길이");
+//		System.out.println(resultList.size());
+//		for(Card card : resultList) {
+//			System.out.println(card.getTitle());
+//		}
 		
 		System.out.println("길이");
-		System.out.println(resultList.size());
-		for(Card card : resultList) {
+		System.out.println(resultList2.size());
+		for(Card card : resultList2) {
 			System.out.println(card.getTitle());
 		}
 	}

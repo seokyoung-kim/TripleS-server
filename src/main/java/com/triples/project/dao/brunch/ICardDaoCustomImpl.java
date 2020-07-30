@@ -1,21 +1,15 @@
 package com.triples.project.dao.brunch;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
-import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
-import org.springframework.data.mongodb.core.aggregation.MergeOperation;
-import org.springframework.data.mongodb.core.aggregation.MergeOperation.MergeOperationBuilder;
-import org.springframework.data.mongodb.core.aggregation.MergeOperation.MergeOperationTarget;
-import org.springframework.data.mongodb.core.aggregation.MergeOperation.WhenDocumentsDontMatch;
-import org.springframework.data.mongodb.core.aggregation.MergeOperation.WhenDocumentsMatch;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.aggregation.MergeOperation.MergeOperationTarget;
+import org.springframework.data.mongodb.core.query.Update;
 
+import com.triples.project.dao.ICardDao;
 import com.triples.project.dao.collection.Card;
 
 import lombok.RequiredArgsConstructor;
@@ -28,27 +22,45 @@ import lombok.RequiredArgsConstructor;
 public class ICardDaoCustomImpl implements ICardDaoCustom{
 
 	private final MongoTemplate mongoTemplate;
+	private final ICardDao cardDao;
 	
 	@Override
-	public List<Card> mergeCard(List<Card> cardList) {
-//		MergeOperationBuilder merge = new MergeOperationBuilder();
-//		MergeOperationTarget mergeTarget = MergeOperationTarget.collection("card");
-//		merge.into(mergeTarget);
-//		String[] colum = new String[3];
-//		colum[0] = "id";
-//		colum[1] = "title";
-//		colum[2] = "description";
-//		merge.on(colum);
-//		merge.whenMatched(WhenDocumentsMatch.replaceDocument());
-//		merge.whenNotMatched(WhenDocumentsDontMatch.insertNewDocument());
-//
-//		MergeOperation mergeOperation = merge.build();
-//		
-//		mongoTemplate.aggregate(Aggregation.newAggregation(mergeOperation), Card.class, Card.class);
+	public void mergeCard(List<Card> newCardList) {
+		List<Card> oldCardList = selectBrunchCardList();
 		
-		Criteria criteria = new Criteria().where("card");
-		Query query = new Query(criteria);
+		for(Card oldCard : oldCardList) {
+			String oldTitle    = oldCard.getTitle();
+			String oldCategory = oldCard.getCategory();
+			String oldWriter   = oldCard.getWriter();
+			String oldPlatform = oldCard.getPlatform();
+			
+			for(Card newCard : newCardList) {
+				String newTitle    = newCard.getTitle();
+				String newCategory = newCard.getCategory();
+				String newWriter   = newCard.getWriter();
+				String newPlatform = newCard.getPlatform();
+
+				if(oldTitle.equals(newTitle) && oldCategory.equals(newCategory) && oldWriter.equals(newWriter) && oldPlatform.equals(newPlatform)) {
+					
+				}
+				else {
+					
+				}
+			}
+		}
+	}
+	
+	private List<Card> selectBrunchCardList(){
+		Query query = new Query();
 		return mongoTemplate.find(query, Card.class);
 	}
 	
+	private void updateBrunchCard(String title) {
+		Update update = new Update();
+		update.set("title", title);
+		
+		Query query = new Query();
+		
+		mongoTemplate.updateFirst(query, update, Card.class);
+	}
 }

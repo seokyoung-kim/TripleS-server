@@ -23,21 +23,21 @@ public class CrawlingScheduler {
     @PostConstruct
     public void start() throws SchedulerException, InterruptedException {
         
-//        JobDataMap jobDataMap1 = new JobDataMap();
-//        jobDataMap1.put("JobName","Job Chain 1"); // JobName 을 Job Chain 1 로 지정
-//        JobDetail jobDetail = JobBuilder.newJob(VelogJob.class).usingJobData(jobDataMap1).build();
-//
-//        JobDataMap jobDataMap2 = new JobDataMap();
-//        jobDataMap2.put("JobName","Job Chain 2");
-//        JobDetail jobDetail2 = JobBuilder.newJob(FestaJob.class).usingJobData(jobDataMap2).build();
+        JobDataMap jobDataMap1 = new JobDataMap();
+        jobDataMap1.put("JobName","Job Chain 1"); // JobName 을 Job Chain 1 로 지정
+        JobDetail jobDetail = JobBuilder.newJob(VelogJob.class).usingJobData(jobDataMap1).build();
+
+        JobDataMap jobDataMap2 = new JobDataMap();
+        jobDataMap2.put("JobName","Job Chain 2");
+        JobDetail jobDetail2 = JobBuilder.newJob(FestaJob.class).usingJobData(jobDataMap2).build();
 
         JobDataMap jobDataMap3 = new JobDataMap();
         jobDataMap3.put("JobName","Job Chain 3");
         JobDetail jobDetail3 = JobBuilder.newJob(BrunchJob.class).usingJobData(jobDataMap3).build();
 
 
-//        scheduler.scheduleJob(jobDetail, buildCronJobTrigger("59 * * * * ?"));
-//        scheduler.scheduleJob(jobDetail2, buildCronJobTrigger("59 * * * * ?"));
+        scheduler.scheduleJob(jobDetail, buildCronJobTrigger("59 * * * * ?"));
+        scheduler.scheduleJob(jobDetail2, buildCronJobTrigger("59 * * * * ?"));
         scheduler.scheduleJob(jobDetail3, buildCronJobTrigger("59 * * * * ?"));
 
         Thread.sleep(3 * 1000);  // Job이 실행될 수 있는 시간 여유를 준다

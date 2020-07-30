@@ -5,5 +5,5 @@ import java.util.List;
 import com.triples.project.dao.collection.Card;
 
 public interface ICardDaoCustom {
-	List<Card> mergeCard(List<Card> cardList);
+	void mergeCard(List<Card> newCardList);
 }
