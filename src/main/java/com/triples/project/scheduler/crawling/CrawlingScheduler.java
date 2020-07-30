@@ -39,9 +39,9 @@ public class CrawlingScheduler {
         JobDetail jobDetail3 = JobBuilder.newJob(BrunchJob.class).usingJobData(jobDataMap3).build();
 
 
-        scheduler.scheduleJob(jobDetail, buildCronJobTrigger("59 * * * * ?"));
-        scheduler.scheduleJob(jobDetail2, buildCronJobTrigger("59 * * * * ?"));
-        scheduler.scheduleJob(jobDetail3, buildCronJobTrigger("59 * * * * ?"));
+        scheduler.scheduleJob(jobDetail, buildCronJobTrigger("0 0/2 * * * ?"));
+        scheduler.scheduleJob(jobDetail2, buildCronJobTrigger("0 0/2 * * * ?"));
+        scheduler.scheduleJob(jobDetail3, buildCronJobTrigger("0 0/2 * * * ?"));
 
         Thread.sleep(3 * 1000);  // Job이 실행될 수 있는 시간 여유를 준다
 

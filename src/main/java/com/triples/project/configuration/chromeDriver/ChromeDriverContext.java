@@ -42,7 +42,7 @@ public class ChromeDriverContext {
         WebDriverManager.chromedriver().setup();
 
         ChromeOptions options = new ChromeOptions();
-       // options.addArguments("headless");
+        options.addArguments("headless");
         driver = new ChromeDriver(options);
         driver.manage().window().maximize(); // window 창 최대화
 
