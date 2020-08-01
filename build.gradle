@@ -24,13 +24,14 @@ dependencies {
     // test 르 위해 잠시 주석
     // implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
     // lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation('org.springframework.boot:spring-boot-starter-test')
+
 
     compile group: 'org.jsoup', name: 'jsoup', version: '1.13.1'
     compile group: 'org.seleniumhq.selenium', name: 'selenium-java'//, version: '3.14.0'
