@@ -43,6 +43,8 @@ public class ChromeDriverContext {
 
         ChromeOptions options = new ChromeOptions();
         options.addArguments("headless");   // WebDriver 화면 background 실행
+        options.addArguments("no-sandbox");
+        options.addArguments("disable-gpu");
         driver = new ChromeDriver(options);
         driver.manage().window().maximize(); // window 창 최대화
 
