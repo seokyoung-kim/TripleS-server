@@ -38,10 +38,10 @@ public class CrawlingScheduler {
         jobDataMap3.put("JobName","Job Chain 3");
         JobDetail jobDetail3 = JobBuilder.newJob(BrunchJob.class).usingJobData(jobDataMap3).build();
 
-
-        scheduler.scheduleJob(jobDetail, buildCronJobTrigger("0 0/2 * * * ?"));
-        scheduler.scheduleJob(jobDetail2, buildCronJobTrigger("0 0/2 * * * ?"));
-        scheduler.scheduleJob(jobDetail3, buildCronJobTrigger("0 0/2 * * * ?"));
+        // Test 를 위하여 임시적으로 3분마다 실행 
+        scheduler.scheduleJob(jobDetail, buildCronJobTrigger("0 0/3 * * * ?"));
+        scheduler.scheduleJob(jobDetail2, buildCronJobTrigger("0 0/3 * * * ?"));
+        scheduler.scheduleJob(jobDetail3, buildCronJobTrigger("0 0/3 * * * ?"));
 
         Thread.sleep(3 * 1000);  // Job이 실행될 수 있는 시간 여유를 준다
 
