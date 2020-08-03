@@ -42,11 +42,12 @@ public class ChromeDriverContext {
         WebDriverManager.chromedriver().setup();
 
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("headless");   // WebDriver 화면 background 실행
-        options.addArguments("no-sandbox");
-        options.addArguments("disable-gpu");
+
+        options.addArguments("headless");    // WebDriver 화면 background 실행
+        options.addArguments("no-sandbox");  // linux 서버에서 사용하기 위한 설정
+        options.addArguments("disable-gpu"); // 속도 향상을 위해 gpu 제거
         driver = new ChromeDriver(options);
-        driver.manage().window().maximize(); // window 창 최대화
+        driver.manage().window().maximize(); // browser 창 최대화
 
         return driver;
     }

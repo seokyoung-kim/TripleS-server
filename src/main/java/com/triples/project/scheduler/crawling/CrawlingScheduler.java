@@ -38,7 +38,8 @@ public class CrawlingScheduler {
         jobDataMap3.put("JobName","Job Chain 3");
         JobDetail jobDetail3 = JobBuilder.newJob(BrunchJob.class).usingJobData(jobDataMap3).build();
 
-        // 매일 오후 18시마다 실행 
+
+        // 매일 오후 18시마다 실행
         scheduler.scheduleJob(jobDetail, buildCronJobTrigger("0 0 18 * * ?"));
         scheduler.scheduleJob(jobDetail2, buildCronJobTrigger("0 0 18 * * ?"));
         scheduler.scheduleJob(jobDetail3, buildCronJobTrigger("0 0 18 * * ?"));
