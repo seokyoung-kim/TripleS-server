@@ -29,6 +29,7 @@ public class FestaCrawling implements ICrawling {
     private final WebDriverWait webDriverWait;
 
     private final String url = "https://festa.io/events";
+    private final String platform = "festa";
 
     @Override
     public List<Card> startCrawling() throws InterruptedException {
@@ -61,18 +62,18 @@ public class FestaCrawling implements ICrawling {
             String link = target.getAttribute("href");
             String image = target.findElement(By.xpath(".//div[@src]")).getAttribute("src");
             String title = target.findElement(By.xpath(".//h3")).getAttribute("textContent");
-            String data = target.findElement(By.xpath(".//time")).getAttribute("datetime"); // 크롤링 한 시간
+            String date = target.findElement(By.xpath(".//time")).getAttribute("datetime");      // 작성 시간
             String writer = target.findElement(By.xpath(".//span")).getAttribute("textContent"); // 작성자
 
-            String card_footer = target.findElement(By.xpath(".//div[@class='EventCardMobile__Fee-sc-1do1vt8-11 jpyylk']"))
-                    .getAttribute("textContent");
-            // 무료, 유료 교육 , 외부 이벤트 로 수정 할 것
+//            String card_footer = target.findElement(By.xpath(".//div[@class='EventCardMobile__Fee-sc-1do1vt8-11 jpyylk']"))
+//                    .getAttribute("textContent");
+//            // 무료, 유료 교육 , 외부 이벤트 로 수정 할 것
 
             System.out.println(">>>>>>>>>>>>" + link);
 
 
             cardList.add(Card.builder().title(title).link(link).image(image)
-                    .date(data).writer(writer).build());
+                    .date(date).writer(writer).platform(platform).build());
         }
 
         return cardList;
