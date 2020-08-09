@@ -1,9 +1,0 @@
-<h1>Login Test</h1>
-
-{{#userName}}
-    Logged in as: <span id="user">{{user}}</span>
-    <a href="/api/v1/auth/logout" class="btn btn-info active" role="button">Logout</a>
-{{/userName}}
-{{^userName}}
-    <a href="/oauth2/authorization/google" class="btn btn-info active" role="button">Google Login</a>
-{{/userName}}

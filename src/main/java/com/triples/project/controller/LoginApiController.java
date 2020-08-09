@@ -17,7 +17,7 @@ public class LoginApiController {
 
     private final HttpSession httpSession;
 
-    @GetMapping("/test")
+    @GetMapping("/")
     public SessionUser index(OAuth2AuthenticationToken authentication) {
 
         log.info(">>>>>>>>>>>> authentication = " + authentication);
