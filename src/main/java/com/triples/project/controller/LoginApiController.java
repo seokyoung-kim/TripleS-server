@@ -26,4 +26,13 @@ public class LoginApiController {
 
         return user;
     }
+
+    @GetMapping("/api/v1/verify")
+    public SessionUser verify(OAuth2AuthenticationToken authentication) {
+
+        log.info(">>>>>>>>>>>> authentication2 = " + authentication);
+        SessionUser user = (SessionUser) httpSession.getAttribute("user");
+
+        return user;
+    }
 }
