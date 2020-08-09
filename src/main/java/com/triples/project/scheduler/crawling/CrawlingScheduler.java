@@ -40,9 +40,9 @@ public class CrawlingScheduler {
 
 
         // 매일 오후 18시마다 실행
-        scheduler.scheduleJob(jobDetail, buildCronJobTrigger("0 0/5 * * * ?"));
-        scheduler.scheduleJob(jobDetail2, buildCronJobTrigger("0 0/5 * * * ?"));
-        scheduler.scheduleJob(jobDetail3, buildCronJobTrigger("0 0/5 * * * ?"));
+        scheduler.scheduleJob(jobDetail, buildCronJobTrigger("0 0 18 * * ?"));
+        scheduler.scheduleJob(jobDetail2, buildCronJobTrigger("0 0 18 * * ?"));
+        scheduler.scheduleJob(jobDetail3, buildCronJobTrigger("0 0 18 * * ?"));
 
         Thread.sleep(3 * 1000);  // Job이 실행될 수 있는 시간 여유를 준다
 

@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .oauth2Login()
-                .defaultSuccessUrl("/check")
+                .defaultSuccessUrl("https://triples.netlify.app/check/")
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService)
 
