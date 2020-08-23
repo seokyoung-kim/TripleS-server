@@ -1,0 +1,10 @@
+
+
+{{#userName}}
+    Logged in as: <span id="user">{{user}}</span>
+
+    <a href="/logout" role="button">Logout</a>
+{{/userName}}
+{{^userName}}
+    <a href="/oauth2/authorization/google?redirect_uri=http://localhost:8080/api/v1/login" role="button">Google Login</a>
+{{/userName}}

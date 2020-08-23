@@ -1,38 +1,25 @@
 package com.triples.project.controller;
 
-import com.triples.project.dto.SessionUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpSession;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 public class LoginApiController {
 
-    private final HttpSession httpSession;
+    @GetMapping("/api/v1/login")
+    public String login() {
 
-    @GetMapping("/")
-    public SessionUser index(OAuth2AuthenticationToken authentication) {
-
-        log.info(">>>>>>>>>>>> authentication = " + authentication);
-
-        SessionUser user = (SessionUser) httpSession.getAttribute("user");
-
-        return user;
+        log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        return "Success ADMIN";
     }
 
-    @GetMapping("/api/v1/verify")
-    public SessionUser verify(OAuth2AuthenticationToken authentication) {
+    @GetMapping("/api/v1/login2")
+    public String login2() {
 
-        log.info(">>>>>>>>>>>> authentication2 = " + authentication);
-        SessionUser user = (SessionUser) httpSession.getAttribute("user");
-
-        return user;
+        return "Success MANAGER";
     }
 }
