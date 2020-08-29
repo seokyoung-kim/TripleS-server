@@ -28,10 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Transactional
-    public UserDetails loadUserById(String id) {
-        User user = iUserDao.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("User", "id", id)
-        );
+    public UserDetails createUserDetails(User user) {
 
         return UserPrincipal.create(user);
     }

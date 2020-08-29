@@ -1,6 +1,8 @@
 package com.triples.project.configuration.oauth;
 
+import com.triples.project.dto.Role;
 import com.triples.project.security.CustomUserDetailsService;
+import com.triples.project.security.RestAuthenticationEntryPoint;
 import com.triples.project.security.TokenAuthenticationFilter;
 import com.triples.project.security.oauth2.CustomOAuth2UserService;
 import com.triples.project.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
@@ -23,8 +25,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @RequiredArgsConstructor
-@EnableWebSecurity // Spring Security 활성화
-@EnableGlobalMethodSecurity(
+@EnableWebSecurity           // Spring Security 활성화
+@EnableGlobalMethodSecurity( // SecurityMethod 활성화
         securedEnabled = true,
         jsr250Enabled = true,
         prePostEnabled = true
@@ -56,6 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new HttpCookieOAuth2AuthorizationRequestRepository();
     }
 
+    // Authorization에 사용할 userDetailService와 password Encoder를 정의한다.
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder
@@ -69,6 +72,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    // AuthenticationManager 외부에서 사용하기 위해서, AuthenticationManagerBean을 이용하여
+    // SpringSecurity 밖으로 Authentication을 빼 내야 한다. ( @Bean 설정 해야함 )
+    // 단순히 @Autowired 사용하면 에러
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -78,38 +84,39 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors()
+                .cors() // cors 허용
                     .and()
-                .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement() // session Creation Policy를 stateless 정의하여 session 사용 안함
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 사용하기 위해
                     .and()
-                .csrf()
+                .csrf()       // csrf 사용 안함
                     .disable()
                 .formLogin()
                     .disable()
                 .httpBasic()
                     .disable()
+                .exceptionHandling()
+                    .authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                    .and()
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
+                .antMatchers("/api/v1/**").hasAnyRole(Role.GUEST.name() ,Role.USER.name(), Role.ADMIN.name())
                 .antMatchers("/auth/**", "/oauth2/**").permitAll()
-                .antMatchers("/api/v1/login").hasRole("ADMIN")
-                .antMatchers("/api/v1/login2").hasRole("MANAGER")
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login()
                     .authorizationEndpoint()
-                        .baseUri("/oauth2/authorization")
+                        .baseUri("/oauth2/authorization") // client 에서 처음 로그인 시도 URI
                         .authorizationRequestRepository(cookieAuthorizationRequestRepository())
                         .and()
-                    .userInfoEndpoint()
+                    .userInfoEndpoint() // 로그인시 사용할 User Service를 정의
                         .userService(customOAuth2UserService)
                         .and()
                     .successHandler(oAuth2AuthenticationSuccessHandler)
                     .failureHandler(oAuth2AuthenticationFailureHandler);
 
         // Add our custom Token based authentication filter
+        // request 요청 올때마다 UsernamePasswordAuthenticationFilter 앞에 custom 필터 추가!
         http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
-
-
 }
