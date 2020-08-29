@@ -2,14 +2,12 @@ package com.triples.project.security;
 
 import com.triples.project.configuration.oauth.AppProperties;
 import io.jsonwebtoken.*;
-import javafx.scene.control.Alert;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.HashMap;
 
 @Slf4j
 @RequiredArgsConstructor
