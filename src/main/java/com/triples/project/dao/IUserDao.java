@@ -8,4 +8,7 @@ import java.util.Optional;
 public interface IUserDao extends MongoRepository<User, String> {
 
     Optional<User> findByEmail(String email);
+    User findByUsername(String username);
+
+    Boolean existsByEmail(String email);
 }
