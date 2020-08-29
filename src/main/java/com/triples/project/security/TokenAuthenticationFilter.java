@@ -3,6 +3,7 @@ package com.triples.project.security;
 
 import com.triples.project.dao.collection.User;
 import com.triples.project.dto.Role;
+import com.triples.project.util.CookieUtils;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,18 +11,19 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.security.Principal;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
 
 /**
  * OncePerRequestFilter : 같은 요청에 대해서 단 한번만 처리가 수행되는 것을 보장하는 기반 클래스로
@@ -40,7 +42,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         try {
             // Get JWT Token
             String jwt = getJwtFromRequest(request);
-
+            getJwtFromCookie(request);
             log.info(">>>>>> TokenAuthenticationFilter " + jwt);
 
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) { // JWT Validate
@@ -80,5 +82,13 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             return bearerToken.substring(7, bearerToken.length());
         }
         return null;
+    }
+    private Optional<Cookie> getJwtFromCookie(HttpServletRequest request) {
+
+        Optional<Cookie> cookie = CookieUtils.getCookie(request,"Authorization");
+
+        log.info(">>>> cookie " + cookie.toString() + " " + cookie);
+
+        return cookie;
     }
 }

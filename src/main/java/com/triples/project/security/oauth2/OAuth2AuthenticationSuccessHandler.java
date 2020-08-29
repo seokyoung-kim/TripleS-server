@@ -43,10 +43,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
 
         String token = tokenProvider.createToken(authentication);
-
-        //test
-        response.setHeader("jwt", token);
-        CookieUtils.addCookie(response, "auth", token,180 );
+        
+        CookieUtils.addCookie(response, "token", token,180 );
         clearAuthenticationAttributes(request, response);
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
