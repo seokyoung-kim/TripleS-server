@@ -99,7 +99,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authenticationEntryPoint(new RestAuthenticationEntryPoint())
                     .and()
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
+                .antMatchers("/**").permitAll() // rest api 테스트를 위해 전체 허용
                 .antMatchers("/api/v1/cards").permitAll()
                 .antMatchers("/api/v1/**").hasAnyRole(Role.GUEST.name() ,Role.USER.name(), Role.ADMIN.name())
                 .antMatchers("/auth/**", "/oauth2/**").permitAll()
