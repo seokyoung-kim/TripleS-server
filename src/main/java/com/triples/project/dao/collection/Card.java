@@ -2,6 +2,7 @@ package com.triples.project.dao.collection;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -17,7 +18,7 @@ import java.util.Date;
 public class Card {
 
     @Id
-    public String id;
+    public ObjectId id;
     private String image;
     private String writer;
     private String link;
