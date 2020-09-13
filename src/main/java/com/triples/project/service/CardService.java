@@ -2,13 +2,13 @@ package com.triples.project.service;
 
 import com.triples.project.dao.ICardDao;
 import com.triples.project.dao.collection.Card;
+import com.triples.project.dto.CursorResult;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.bson.types.ObjectId;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -36,5 +36,24 @@ public class CardService {
     @Transactional(readOnly = true)
     public List<Card> findByCategory(String category) {
         return iCardDao.findByCategory(category);
+    }
+
+    @Transactional
+    public CursorResult<Card> findAllByOrderByIdDesc(ObjectId cursorId, Pageable page) {
+        List<Card> cards = getCards(cursorId, page);
+        ObjectId lastCursorId = cards.isEmpty() ? null :
+                                cards.get(cards.size()-1).getId();
+
+        return new CursorResult<>(cards,hasNext(lastCursorId),lastCursorId, cards.size());
+    }
+
+    private List<Card> getCards(ObjectId id, Pageable page) {
+        return id == null ?
+                iCardDao.findAllByOrderByIdDesc(page) :
+                iCardDao.findByIdLessThanOrderByIdDesc(id, page);
+    }
+    private Boolean hasNext(ObjectId id) {
+        if(id == null) return false;
+        return iCardDao.existsByIdLessThanOrderByIdDesc(id);
     }
 }
