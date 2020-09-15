@@ -5,7 +5,6 @@ import com.triples.project.dto.CursorResult;
 import com.triples.project.service.CardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,17 +27,17 @@ public class CardApiController {
      * 전체 카드 리스트 불러오기
      */
     @GetMapping("/api/v1/cards")
-    public ResponseEntity<CursorResult<Card>> findAll(@RequestParam(required = false) ObjectId cursorId,
+    public ResponseEntity<CursorResult<Card>> findAll(@RequestParam(required = false) String next,
+                                                      @RequestParam(required = false) String previous,
                                                       @RequestParam(required = false) Integer pageSize) {
 
-//        List<Card> cardList = cardService.findAll();
-
-        log.info("[findAll] cursorId ans pageSize :" + cursorId + ", " + pageSize);
+        log.info("[findAll] previous cursor :" + previous);
+        log.info("[findAll] next cursor :" + next);
 
         if(pageSize == null) pageSize = PAGE_SIZE;
 
         CursorResult<Card> result  =
-                cardService.findAllByOrderByIdDesc(cursorId, PageRequest.of(0, pageSize));
+                cardService.findAllByOrderByIdDesc(previous, next, PageRequest.of(0, pageSize));
 
         return ResponseEntity.ok().body(result);
     }

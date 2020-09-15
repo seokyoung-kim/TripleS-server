@@ -9,13 +9,20 @@ import java.util.List;
 
 public interface ICardDao extends MongoRepository<Card, ObjectId> {
 
+    // first page request
     List<Card> findAllByOrderByIdDesc(Pageable pageable);
 
+    // next cursor pagination after first request
     List<Card> findByIdLessThanOrderByIdDesc(ObjectId id, Pageable pageable);
 
+    // prev cursor pagination after first request
+    List<Card> findByIdGreaterThanOrderByIdAsc(ObjectId id, Pageable pageable);
+
+    // whether next cursor exists
     Boolean existsByIdLessThanOrderByIdDesc(ObjectId id);
 
-    Boolean existsIdBy(ObjectId id);
+    // whether prev cursor exists
+    Boolean existsByIdGreaterThanOrderByIdDesc(ObjectId id);
 
     List<Card> findByPlatform(String platform);
 
