@@ -27,18 +27,32 @@ public class CardServiceTest {
     @DisplayName("커서 페이지네이션 테스트")
     public void cursorBasedPagination() {
 
-        // first request
-        CursorResult<Card> cards = cardService.findAllByOrderByIdDesc(null, PageRequest.of(0,10));
+        // first request ( next )
+        CursorResult<Card> cards = cardService.findAllByOrderByIdDesc(null, null, PageRequest.of(0,10));
 
-        ObjectId nextCursorId = cards.getCursorId();
+        String nextCursorId = cards.getCursors().getNext();
         List<Card> list = cards.getValues();
-        assertThat(nextCursorId).isEqualTo(list.get(list.size()-1).getId());
+        String target = list.get(list.size()-1).getId().toHexString();
+        assertThat(nextCursorId).isEqualTo(target);
 
-        // after first request
-        cards = cardService.findAllByOrderByIdDesc(nextCursorId, PageRequest.of(0,10));
-        nextCursorId = cards.getCursorId();
+        // first request ( previous )
+        String prevCursorId = list.get(0).getId().toHexString();
+        cards = cardService.findAllByOrderByIdDesc(prevCursorId, null, PageRequest.of(0,10));
+        List<Card> result = cards.getValues();
+        assertThat(result.size()).isEqualTo(0);
+
+        // after first request ( next )
+        cards = cardService.findAllByOrderByIdDesc(null, nextCursorId, PageRequest.of(0,10));
+        nextCursorId = cards.getCursors().getNext();
         list = cards.getValues();
-        assertThat(nextCursorId).isEqualTo(list.get(list.size()-1).getId());
+        target = list.get(list.size()-1).getId().toHexString();
+        assertThat(nextCursorId).isEqualTo(target);
 
+        // after first request ( previous )
+        String curPrevId = list.get(0).getId().toHexString();
+        cards = cardService.findAllByOrderByIdDesc(curPrevId, null, PageRequest.of(0,10));
+        list = cards.getValues();
+        curPrevId = list.get(0).getId().toHexString();
+        assertThat(curPrevId).isEqualTo(prevCursorId);
     }
 }

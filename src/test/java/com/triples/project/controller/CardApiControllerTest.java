@@ -17,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -29,11 +31,14 @@ public class CardApiControllerTest {
     @Autowired private TestRestTemplate restTemplate;
 
     @Test
+    @DisplayName("커서 페이지 네이션 테스트")
     public void findAllByOrderByIdDesc() {
         // given
-        CursorResult<Card> list = cardService.findAllByOrderByIdDesc(null, PageRequest.of(0,20));
-        ObjectId id = list.getCursorId();
-        String url = "http://localhost:"+port+"/api/v1/cards?cursorId="+id+"&pageSize="+40;
+        CursorResult<Card> list = cardService.findAllByOrderByIdDesc(null,null, PageRequest.of(0,10));
+        List<Card> cards = list.getValues();
+
+        String next = cards.get(0).getId().toHexString();
+        String url = "http://localhost:"+port+"/api/v1/cards?cursorId="+next;
 
         //when
         ResponseEntity<String> responseEntity =

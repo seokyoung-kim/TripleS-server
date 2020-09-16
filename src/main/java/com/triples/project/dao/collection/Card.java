@@ -3,15 +3,10 @@ package com.triples.project.dao.collection;
 import lombok.Builder;
 import lombok.Getter;
 import org.bson.types.ObjectId;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.Date;
 
 @Getter
 @Document
