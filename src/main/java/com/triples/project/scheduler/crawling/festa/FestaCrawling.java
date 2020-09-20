@@ -1,5 +1,6 @@
 package com.triples.project.scheduler.crawling.festa;
 
+import com.triples.project.dao.ICardDao;
 import com.triples.project.dao.collection.Card;
 import com.triples.project.scheduler.crawling.ICrawling;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class FestaCrawling implements ICrawling {
     // webDriver bean 재사용
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
+    private final ICardDao iCardDao;
 
     private final String url = "https://festa.io/events";
     private final String platform = "festa";
@@ -69,8 +71,9 @@ public class FestaCrawling implements ICrawling {
 //                    .getAttribute("textContent");
 //            // 무료, 유료 교육 , 외부 이벤트 로 수정 할 것
 
-            System.out.println(">>>>>>>>>>>>" + link);
-
+            // delete duplication
+            List<Card> cards = iCardDao.findByLink(link);
+            if(cards.size() > 0) continue;
 
             cardList.add(Card.builder().title(title).link(link).image(image)
                     .date(date).writer(writer).platform(platform).build());

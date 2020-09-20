@@ -29,4 +29,6 @@ public interface ICardDao extends MongoRepository<Card, ObjectId> {
     List<Card> findByWriter(String writer);
 
     List<Card> findByCategory(String category);
+
+    List<Card> findByLink(String link);
 }
