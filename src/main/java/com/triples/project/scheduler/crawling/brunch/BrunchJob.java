@@ -1,11 +1,10 @@
 package com.triples.project.scheduler.crawling.brunch;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-import org.quartz.InterruptableJob;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.quartz.UnableToInterruptJobException;
+import lombok.extern.slf4j.Slf4j;
+import org.quartz.*;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import com.triples.project.dao.ICardDao;
@@ -14,7 +13,7 @@ import com.triples.project.scheduler.crawling.ICrawling;
 
 import lombok.RequiredArgsConstructor;
 
-
+@Slf4j
 @RequiredArgsConstructor
 public class BrunchJob extends QuartzJobBean implements InterruptableJob {
 
@@ -22,6 +21,8 @@ public class BrunchJob extends QuartzJobBean implements InterruptableJob {
     
     private final ICrawling brunchCrawling;
 
+    private boolean isInterrupted = false;
+    private JobKey jobKey = null;
 
     // 예외 처리
     @Override
@@ -31,7 +32,11 @@ public class BrunchJob extends QuartzJobBean implements InterruptableJob {
 
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
-        // 크롤링 로직 작성 to do
+        jobKey = context.getJobDetail().getKey();
+
+        // 현재 JobName 확인
+        log.info("### {} is being executed!",
+                context.getJobDetail().getJobDataMap().get("JobName").toString());
 
         List<Card> cardList = null;
 		try {
@@ -40,7 +45,10 @@ public class BrunchJob extends QuartzJobBean implements InterruptableJob {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>" + cardList.size());
+
         cardDao.saveAll(cardList);
+
+        log.info("execute invoked, jobKey: " + jobKey + ", time:" +
+                LocalDateTime.now().toString() + ", crawling size : " + cardList.size());
     }
 }

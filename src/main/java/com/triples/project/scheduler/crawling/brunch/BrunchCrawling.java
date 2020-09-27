@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.triples.project.dao.ICardDao;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -24,12 +26,15 @@ import lombok.RequiredArgsConstructor;
  * @URL : brunch
  * @description : URL에 있는 내용을 크롤링하는 클래스
  */
+@Slf4j
 @Component("brunchCrawling")
 @RequiredArgsConstructor
 public class BrunchCrawling implements ICrawling {
 
 	// driver 재사용
-private final WebDriver driver;
+	private final WebDriver driver;
+	private final String platform = "brunch";
+	private final ICardDao iCardDao;
 
 @Override
 public List<Card> startCrawling() {
@@ -55,7 +60,7 @@ public List<Card> startCrawling() {
 		Boolean heightFlag = true;
 		//브라우져 높이
 		int browerHeight = Integer.parseInt(js.executeScript("return document.body.scrollHeight").toString());
-		System.out.println("browerHeigth : " + browerHeight);
+		log.info("browerHeigth : " + browerHeight);
 		int compareBrowerHeight = 0;
 		
 		while(heightFlag) {
@@ -68,7 +73,7 @@ public List<Card> startCrawling() {
 				e.printStackTrace();
 			}
 			compareBrowerHeight = Integer.parseInt(js.executeScript("return document.body.scrollHeight").toString());
-			System.out.println("compareBrowerHeight : " + compareBrowerHeight);
+			log.info("compareBrowerHeight : " + compareBrowerHeight);
 			if((compareBrowerHeight-browerHeight) > 0) {
 				browerHeight = compareBrowerHeight;
 			} else {
@@ -113,8 +118,12 @@ public List<Card> startCrawling() {
 			try {
 				image	   = content.findElement(By.cssSelector("div.post_thumb > img")).getAttribute("src");
 			} catch (Exception e) {
-				System.out.println("사진 없음");
+				log.info("사진 없음");
 			}
+
+			// delete duplication
+			List<Card> cards = iCardDao.findByLink(link);
+			if(cards.size() > 0) continue;
 			
 			cardList.add(
 					Card.builder()
@@ -125,6 +134,7 @@ public List<Card> startCrawling() {
 					.link(link)
 					.date(today)
 					.image(image)
+					.platform(platform)
 					.build()
 			);
 		}

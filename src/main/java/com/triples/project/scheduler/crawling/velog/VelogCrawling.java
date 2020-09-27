@@ -1,8 +1,10 @@
 package com.triples.project.scheduler.crawling.velog;
 
+import com.triples.project.dao.ICardDao;
 import com.triples.project.dao.collection.Card;
 import com.triples.project.scheduler.crawling.ICrawling;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -24,6 +26,7 @@ import java.util.concurrent.TimeUnit;
  * @description : URL에 있는 내용을 크롤링하는 클래스
  */
 
+@Slf4j
 @Component("velogCrawling")
 @RequiredArgsConstructor
 public class VelogCrawling implements ICrawling {
@@ -31,8 +34,10 @@ public class VelogCrawling implements ICrawling {
     // driver 재사용
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
+    private final ICardDao iCardDao;
 
     private final String url = "https://velog.io/recent";
+    private final String platform = "velog";
 
     @Override
     public List<Card> startCrawling() throws InterruptedException {
@@ -74,8 +79,12 @@ public class VelogCrawling implements ICrawling {
                 WebElement imageTemp = target.findElement(By.xpath(".//div[@class='sc-Rmtcm dxtZdc']"));
                 image = imageTemp.findElement(By.xpath(".//img")).getAttribute("src");
             } catch (Exception e) {
-                System.out.println("사진 없음");
+                log.info("사진 없음");
             }
+
+            // delete duplication
+            List<Card> cards = iCardDao.findByLink(link);
+            if(cards.size() > 0) continue;
 
             cardList.add(
                     Card.builder().
@@ -86,6 +95,7 @@ public class VelogCrawling implements ICrawling {
                             writer(writer).
                             created_at(created_at).
                             date(today).
+                            platform(platform).
                             build());
         }
 
