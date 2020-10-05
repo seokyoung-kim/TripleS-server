@@ -9,14 +9,14 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 public class ImageSizeUtils {
-	private String SMALL = "SMALL";
+	private static String SMALL = "SMALL";
 	
-	private String NONE = "NONE";
+	private static String NONE = "NONE";
 	
-	private String BIG = "BIG";
+	private static String BIG = "BIG";
 	
 	@SuppressWarnings("unused")
-	private Map<String, Integer> getImageSize(String src) throws IOException{
+	private static Map<String, Integer> getImageSize(String src) throws IOException{
 		Map<String, Integer> sizeMap = new HashMap<String, Integer>();
 		File image = new File(src);	
 		
@@ -32,10 +32,17 @@ public class ImageSizeUtils {
 		return sizeMap;
 	}
 	
-	public String defineCardType(int width, int height) {
+	private static String defineCardType(int width, int height) {
 		String imageType = "";
 		
-		float ratio = width / height;
+		float ratio = 0;
+		
+		try {
+			ratio = width / height;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
 		
 		if(ratio < 1.33) {
 			imageType = BIG;
@@ -44,6 +51,13 @@ public class ImageSizeUtils {
 		} else {
 			imageType = NONE;
 		}
+		
+		return imageType;
+	}
+	
+	public static String getImageType(String src) throws IOException {
+		Map<String, Integer> imageSize = getImageSize(src);
+		String imageType = defineCardType(imageSize.get("width"), imageSize.get("height"));
 		
 		return imageType;
 	}

@@ -1,24 +1,25 @@
 package com.triples.project.scheduler.crawling.brunch;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.triples.project.dao.ICardDao;
-import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
+import com.triples.project.dao.ICardDao;
 import com.triples.project.dao.collection.Card;
 import com.triples.project.scheduler.crawling.ICrawling;
+import com.triples.project.util.ImageSizeUtils;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 /**
@@ -36,8 +37,8 @@ public class BrunchCrawling implements ICrawling {
 	private final String platform = "brunch";
 	private final ICardDao iCardDao;
 
-@Override
-public List<Card> startCrawling() {
+	@Override
+	public List<Card> startCrawling() throws InterruptedException  {
 
 		List<Card> cardList = new ArrayList<>();
 
@@ -48,12 +49,7 @@ public List<Card> startCrawling() {
 		
 		//데이터가 로딩되는데 시간이 걸리기 때문에 로딩 시간을 기다려 줘야 함.
 		synchronized (buffer) {
-			try {
-				buffer.wait(5000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			buffer.wait(5000);
 		}
 		
 		JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -111,14 +107,16 @@ public List<Card> startCrawling() {
 			
 			String title	   = content.findElement(By.cssSelector("strong")).getText();
 			String description = content.findElement(By.cssSelector("div.wrap_sub_content")).getText();
-			String writer	  = content.findElement(By.cssSelector("span > span:nth-child(10)")).getText();
+			String writer	   = content.findElement(By.cssSelector("span > span:nth-child(10)")).getText();
 			String created_at  = content.findElement(By.cssSelector("span > span.publish_time")).getText();
-			String link		= content.getAttribute("href");
-			String image	   = "";
+			String link		   = content.getAttribute("href");
+			String image	   = getImageSrc(content);
+			String imageType   = "";
 			try {
-				image	   = content.findElement(By.cssSelector("div.post_thumb > img")).getAttribute("src");
-			} catch (Exception e) {
-				log.info("사진 없음");
+				//try catch 쓰는게 진짜 구리다. 개선이 반드시 필요한듯
+				imageType   = ImageSizeUtils.getImageType(image);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 
 			// delete duplication
@@ -139,5 +137,16 @@ public List<Card> startCrawling() {
 			);
 		}
 		return cardList;
+	}
+	
+	private String getImageSrc(WebElement content) {
+		String image	   = "";
+		try {
+			image	   = content.findElement(By.cssSelector("div.post_thumb > img")).getAttribute("src");
+		} catch (Exception e) {
+			log.info("사진 없음");
+		}
+		
+		return image;
 	}
 }
