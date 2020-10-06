@@ -3,7 +3,11 @@ package com.triples.project.scheduler.crawling.festa;
 import com.triples.project.dao.ICardDao;
 import com.triples.project.dao.collection.Card;
 import com.triples.project.scheduler.crawling.ICrawling;
+import com.triples.project.util.ImageSizeUtils;
+
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -33,8 +37,9 @@ public class FestaCrawling implements ICrawling {
     private final String url = "https://festa.io/events";
     private final String platform = "festa";
 
+    @SneakyThrows
     @Override
-    public List<Card> startCrawling() throws InterruptedException {
+    public List<Card> startCrawling() {
 
         List<Card> cardList = new ArrayList<Card>();
 
@@ -66,6 +71,7 @@ public class FestaCrawling implements ICrawling {
             String title = target.findElement(By.xpath(".//h3")).getAttribute("textContent");
             String date = target.findElement(By.xpath(".//time")).getAttribute("datetime");      // 작성 시간
             String writer = target.findElement(By.xpath(".//span")).getAttribute("textContent"); // 작성자
+            String image_type   = ImageSizeUtils.getImageType(image);
 
 //            String card_footer = target.findElement(By.xpath(".//div[@class='EventCardMobile__Fee-sc-1do1vt8-11 jpyylk']"))
 //                    .getAttribute("textContent");
@@ -76,7 +82,7 @@ public class FestaCrawling implements ICrawling {
             if(cards.size() > 0) continue;
 
             cardList.add(Card.builder().title(title).link(link).image(image)
-                    .date(date).writer(writer).platform(platform).build());
+                    .date(date).writer(writer).platform(platform).image_type(image_type).build());
         }
 
         return cardList;

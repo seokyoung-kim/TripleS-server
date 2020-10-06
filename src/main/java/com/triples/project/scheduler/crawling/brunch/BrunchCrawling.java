@@ -1,6 +1,5 @@
 package com.triples.project.scheduler.crawling.brunch;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,7 +18,7 @@ import com.triples.project.scheduler.crawling.ICrawling;
 import com.triples.project.util.ImageSizeUtils;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.SneakyThrows;
 
 
 /**
@@ -27,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
  * @URL : brunch
  * @description : URL에 있는 내용을 크롤링하는 클래스
  */
-@Slf4j
 @Component("brunchCrawling")
 @RequiredArgsConstructor
 public class BrunchCrawling implements ICrawling {
@@ -36,9 +34,10 @@ public class BrunchCrawling implements ICrawling {
 	private final WebDriver driver;
 	private final String platform = "brunch";
 	private final ICardDao iCardDao;
-
+	
+	@SneakyThrows
 	@Override
-	public List<Card> startCrawling() throws InterruptedException  {
+	public List<Card> startCrawling()  {
 
 		List<Card> cardList = new ArrayList<>();
 
@@ -56,20 +55,12 @@ public class BrunchCrawling implements ICrawling {
 		Boolean heightFlag = true;
 		//브라우져 높이
 		int browerHeight = Integer.parseInt(js.executeScript("return document.body.scrollHeight").toString());
-		log.info("browerHeigth : " + browerHeight);
 		int compareBrowerHeight = 0;
 		
 		while(heightFlag) {
 			js.executeScript("window.scrollTo(0,  document.body.scrollHeight);");
-			//js.executeScript("window.scrollTo(0, "+ browerHeight + 100 +");");
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			Thread.sleep(1000);
 			compareBrowerHeight = Integer.parseInt(js.executeScript("return document.body.scrollHeight").toString());
-			log.info("compareBrowerHeight : " + compareBrowerHeight);
 			if((compareBrowerHeight-browerHeight) > 0) {
 				browerHeight = compareBrowerHeight;
 			} else {
@@ -78,25 +69,6 @@ public class BrunchCrawling implements ICrawling {
 		}
 		
 		List<WebElement> contents = driver.findElements(By.cssSelector("#resultArticle > div > div.result_article > div.wrap_article_list > ul > li > a"));
-		
-		/*
-		 * for(WebElement element : contents) { System.out.println("Title : " +
-		 * element.findElement(By.cssSelector("strong")).getText());
-		 * System.out.println("본문 : " +
-		 * element.findElement(By.cssSelector("div.wrap_sub_content")).getText());
-		 * System.out.println("공유수 : " +
-		 * element.findElement(By.cssSelector("span > span:nth-child(2)")).getText());
-		 * System.out.println("댓글수 : " +
-		 * element.findElement(By.cssSelector("span > span:nth-child(5)")).getText());
-		 * System.out.println("작성자 : " +
-		 * element.findElement(By.cssSelector("span > span:nth-child(10)")).getText());
-		 * System.out.println("작성일 : " +
-		 * element.findElement(By.cssSelector("span > span.publish_time")).getText());
-		 * System.out.println("경로 : " + element.getAttribute("href")); try {
-		 * System.out.println("사진경로 : " +
-		 * element.findElement(By.cssSelector("div.post_thumb > img")).getAttribute(
-		 * "src")); } catch (Exception e) { System.out.println("사진없음"); } }
-		 */
 		
 		//오늘 날짜
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -110,14 +82,8 @@ public class BrunchCrawling implements ICrawling {
 			String writer	   = content.findElement(By.cssSelector("span > span:nth-child(10)")).getText();
 			String created_at  = content.findElement(By.cssSelector("span > span.publish_time")).getText();
 			String link		   = content.getAttribute("href");
-			String image	   = getImageSrc(content);
-			String imageType   = "";
-			try {
-				//try catch 쓰는게 진짜 구리다. 개선이 반드시 필요한듯
-				imageType   = ImageSizeUtils.getImageType(image);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			String image	   = content.findElement(By.cssSelector("div.post_thumb > img")).getAttribute("src");
+			String image_type   = ImageSizeUtils.getImageType(image);
 
 			// delete duplication
 			List<Card> cards = iCardDao.findByLink(link);
@@ -133,20 +99,10 @@ public class BrunchCrawling implements ICrawling {
 					.date(today)
 					.image(image)
 					.platform(platform)
+					.image_type(image_type)
 					.build()
 			);
 		}
 		return cardList;
-	}
-	
-	private String getImageSrc(WebElement content) {
-		String image	   = "";
-		try {
-			image	   = content.findElement(By.cssSelector("div.post_thumb > img")).getAttribute("src");
-		} catch (Exception e) {
-			log.info("사진 없음");
-		}
-		
-		return image;
 	}
 }

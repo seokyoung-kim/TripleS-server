@@ -1,20 +1,23 @@
   
 package com.triples.project.scheduler.crawling.velog;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.quartz.InterruptableJob;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.quartz.JobKey;
+import org.quartz.UnableToInterruptJobException;
+import org.springframework.scheduling.quartz.QuartzJobBean;
+
 import com.triples.project.dao.ICardDao;
 import com.triples.project.dao.collection.Card;
 import com.triples.project.scheduler.crawling.ICrawling;
+
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.quartz.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.quartz.QuartzJobBean;
-import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,7 +26,6 @@ public class VelogJob extends QuartzJobBean implements InterruptableJob {
     private final ICardDao cardDao;
     private final ICrawling velogCrawling;
 
-    private boolean isInterrupted = false;
     private JobKey jobKey = null;
 
     // 예외 처리

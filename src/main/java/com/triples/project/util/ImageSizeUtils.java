@@ -15,7 +15,6 @@ public class ImageSizeUtils {
 	
 	private static String BIG = "BIG";
 	
-	@SuppressWarnings("unused")
 	private static Map<String, Integer> getImageSize(String src) throws IOException{
 		Map<String, Integer> sizeMap = new HashMap<String, Integer>();
 		File image = new File(src);	

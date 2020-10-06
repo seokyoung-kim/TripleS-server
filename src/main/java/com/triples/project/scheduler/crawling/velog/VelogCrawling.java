@@ -1,23 +1,24 @@
 package com.triples.project.scheduler.crawling.velog;
 
-import com.triples.project.dao.ICardDao;
-import com.triples.project.dao.collection.Card;
-import com.triples.project.scheduler.crawling.ICrawling;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.springframework.stereotype.Component;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.stereotype.Component;
+
+import com.triples.project.dao.ICardDao;
+import com.triples.project.dao.collection.Card;
+import com.triples.project.scheduler.crawling.ICrawling;
+import com.triples.project.util.ImageSizeUtils;
+
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 
 
 /**
@@ -25,8 +26,6 @@ import java.util.concurrent.TimeUnit;
  * @URL : https://velog.io
  * @description : URL에 있는 내용을 크롤링하는 클래스
  */
-
-@Slf4j
 @Component("velogCrawling")
 @RequiredArgsConstructor
 public class VelogCrawling implements ICrawling {
@@ -39,8 +38,9 @@ public class VelogCrawling implements ICrawling {
     private final String url = "https://velog.io/recent";
     private final String platform = "velog";
 
+    @SneakyThrows
     @Override
-    public List<Card> startCrawling() throws InterruptedException {
+    public List<Card> startCrawling(){
 
         List<Card> cardList = new ArrayList<>();
 
@@ -70,17 +70,14 @@ public class VelogCrawling implements ICrawling {
             String title = target.findElement(By.xpath(".//h4")).getAttribute("textContent");
             String description = target.findElement(By.xpath(".//p")).getAttribute("textContent");
             String writer = target.findElement(By.xpath(".//b")).getAttribute("textContent");
+            //temp를 쓰고 있는데 이유가 있을까?
             WebElement createdTemp = target.findElement(By.xpath(".//div[@class='sub-info']"));
             String created_at = createdTemp.findElement(By.xpath(".//span")).getAttribute("textContent");
-
             String image = null;
 
-            try {
-                WebElement imageTemp = target.findElement(By.xpath(".//div[@class='sc-Rmtcm dxtZdc']"));
-                image = imageTemp.findElement(By.xpath(".//img")).getAttribute("src");
-            } catch (Exception e) {
-                log.info("사진 없음");
-            }
+            WebElement imageTemp = target.findElement(By.xpath(".//div[@class='sc-Rmtcm dxtZdc']"));
+            image = imageTemp.findElement(By.xpath(".//img")).getAttribute("src");
+            String image_type   = ImageSizeUtils.getImageType(image);
 
             // delete duplication
             List<Card> cards = iCardDao.findByLink(link);
@@ -96,6 +93,7 @@ public class VelogCrawling implements ICrawling {
                             created_at(created_at).
                             date(today).
                             platform(platform).
+                            image_type(image_type).
                             build());
         }
 
