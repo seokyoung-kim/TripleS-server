@@ -1,6 +1,7 @@
 package com.triples.project.controller;
 
 import com.triples.project.dao.collection.Card;
+import com.triples.project.domain.repository.CardRepository;
 import com.triples.project.dto.CursorResult;
 import com.triples.project.service.CardService;
 import lombok.RequiredArgsConstructor;
