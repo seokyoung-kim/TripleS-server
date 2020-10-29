@@ -15,7 +15,8 @@ import org.springframework.stereotype.Component;
 import com.triples.project.dao.ICardDao;
 import com.triples.project.dao.collection.Card;
 import com.triples.project.scheduler.crawling.ICrawling;
-import com.triples.project.util.ImageSizeUtils;
+import com.triples.project.util.ImageSizeUtil;
+import com.triples.project.util.ImageToBase64Util;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -82,8 +83,8 @@ public class BrunchCrawling implements ICrawling {
 			String writer	   = content.findElement(By.cssSelector("span > span:nth-child(10)")).getText();
 			String created_at  = content.findElement(By.cssSelector("span > span.publish_time")).getText();
 			String link		   = content.getAttribute("href");
-			String image	   = content.findElement(By.cssSelector("div.post_thumb > img")).getAttribute("src");
-			String image_type   = ImageSizeUtils.getImageType(image);
+			String image	   = ImageToBase64Util.getBase64String(content.findElement(By.cssSelector("div.post_thumb > img")).getAttribute("src"));
+			String image_type  = ImageSizeUtil.getImageType(image);
 
 			// delete duplication
 			List<Card> cards = iCardDao.findByLink(link);

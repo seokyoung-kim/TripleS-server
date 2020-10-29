@@ -15,7 +15,8 @@ import org.springframework.stereotype.Component;
 import com.triples.project.dao.ICardDao;
 import com.triples.project.dao.collection.Card;
 import com.triples.project.scheduler.crawling.ICrawling;
-import com.triples.project.util.ImageSizeUtils;
+import com.triples.project.util.ImageSizeUtil;
+import com.triples.project.util.ImageToBase64Util;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -76,8 +77,8 @@ public class VelogCrawling implements ICrawling {
             String image = null;
 
             WebElement imageTemp = target.findElement(By.xpath(".//div[@class='sc-Rmtcm dxtZdc']"));
-            image = imageTemp.findElement(By.xpath(".//img")).getAttribute("src");
-            String image_type   = ImageSizeUtils.getImageType(image);
+            image = ImageToBase64Util.getBase64String(imageTemp.findElement(By.xpath(".//img")).getAttribute("src"));
+            String image_type   = ImageSizeUtil.getImageType(image);
 
             // delete duplication
             List<Card> cards = iCardDao.findByLink(link);

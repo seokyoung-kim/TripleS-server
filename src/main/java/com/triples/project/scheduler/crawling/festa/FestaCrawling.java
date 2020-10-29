@@ -3,7 +3,8 @@ package com.triples.project.scheduler.crawling.festa;
 import com.triples.project.dao.ICardDao;
 import com.triples.project.dao.collection.Card;
 import com.triples.project.scheduler.crawling.ICrawling;
-import com.triples.project.util.ImageSizeUtils;
+import com.triples.project.util.ImageSizeUtil;
+import com.triples.project.util.ImageToBase64Util;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -67,11 +68,11 @@ public class FestaCrawling implements ICrawling {
         for(WebElement target : list) {
 
             String link = target.getAttribute("href");
-            String image = target.findElement(By.xpath(".//div[@src]")).getAttribute("src");
+            String image = ImageToBase64Util.getBase64String(target.findElement(By.xpath(".//div[@src]")).getAttribute("src"));
             String title = target.findElement(By.xpath(".//h3")).getAttribute("textContent");
             String date = target.findElement(By.xpath(".//time")).getAttribute("datetime");      // 작성 시간
             String writer = target.findElement(By.xpath(".//span")).getAttribute("textContent"); // 작성자
-            String image_type   = ImageSizeUtils.getImageType(image);
+            String image_type   = ImageSizeUtil.getImageType(image);
 
 //            String card_footer = target.findElement(By.xpath(".//div[@class='EventCardMobile__Fee-sc-1do1vt8-11 jpyylk']"))
 //                    .getAttribute("textContent");

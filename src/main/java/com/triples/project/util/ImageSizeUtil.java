@@ -8,7 +8,8 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-public class ImageSizeUtils {
+//이미지 크기에 따른 타입을 구할 수 있도록 하는 유틸
+public class ImageSizeUtil {
 	private static String SMALL = "SMALL";
 	
 	private static String NONE = "NONE";
